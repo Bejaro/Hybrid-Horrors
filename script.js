@@ -17,17 +17,21 @@ fetch(apiUrl + "/api/monsters")
           const newCreature = {
             url: creature.url,
             name: creature.name,
+            size: data.size,
+            type: data.type,
+            alignment: data.alignment,
             hitPoints: data.hit_points,
+            hitPointsRoll: data.hit_points_roll,
             armorClass: data.armor_class,
             speed: {
-                walk: data.speed.walk || null,
+                walk: data.speed.walk || "0 ft.",
                 swim: data.speed.swim || null,
                 fly: data.speed.fly || null,
+                hover: data.speed.hover || null,
                 burrow: data.speed.burrow || null,
                 climb: data.speed.climb || null
               },
             challengeRating: data.challenge_rating
-            // add more properties as needed
           };
           return newCreature;
         })
@@ -46,6 +50,7 @@ fetch(apiUrl + "/api/monsters")
         const creatureSelectTwo = document.getElementById("creature-select-2");
         const creatureSelectOne = document.getElementById("creature-select-1");
 
+        //Create options in select list
         validCreatures.forEach(creature => {
             const option = document.createElement("option");
             option.value = creature.url;
@@ -60,12 +65,15 @@ fetch(apiUrl + "/api/monsters")
         });
 const creatureSelect1 = document.getElementById("creature-select-1");
 const creatureName1 = document.getElementById("creature-name-1");
+const creatureType1 = document.getElementById("creature-type-1");
 const creatureHp1 = document.getElementById("creature-hp-1");
 const creatureAc1 = document.getElementById("creature-ac-1");
 const creatureSpeed1 = document.getElementById("creature-speed-1");
 const creatureCr1 = document.getElementById("creature-cr-1");
 
 creatureSelect1.addEventListener("change", function() {
+    //Wipe additive textcontents for each 
+    creatureType1.textContent = "";
     creatureSpeed1.textContent = "";
     const selectedCreature1 = creatureSelect1.value;
     console.log(selectedCreature1);
@@ -78,24 +86,39 @@ creatureSelect1.addEventListener("change", function() {
     } else {
       const creature1 = validCreatures.find(creature => creature.url === selectedCreature1);
       creatureName1.textContent = creature1.name;
-      creatureHp1.textContent = creature1.hitPoints;
+      //Size, type and alignment are one line
+        if (creature1.size){
+            creatureType1.textContent += creature1.size;
+        }
+        if (creature1.type){
+            creatureType1.textContent += " " + creature1.type;
+        }
+        if (creature1.alignment){
+            creatureType1.textContent += ", " + creature1.alignment;
+        }
+      creatureHp1.textContent = creature1.hitPoints + " (" + creature1.hitPointsRoll + ")";
       creatureAc1.textContent = creature1.armorClass;
+
+      //Speed broken into various categories within the object
     if (creature1.speed.walk) {
-        creatureSpeed1.textContent += "Walk: " + creature1.speed.walk;
+        creatureSpeed1.textContent += " " + creature1.speed.walk;
     }
     if (creature1.speed.swim) {
-        creatureSpeed1.textContent += " Swim: " + creature1.speed.swim;
+        creatureSpeed1.textContent += ", swim " + creature1.speed.swim;
     }
     if (creature1.speed.fly) {
-        creatureSpeed1.textContent += " Fly: " + creature1.speed.fly;
+        creatureSpeed1.textContent += ", fly " + creature1.speed.fly;
+    }
+    if (creature1.speed.hover){
+        creatureSpeed1.textContent += " (hover)";
     }
     if (creature1.speed.burrow) {
-        creatureSpeed1.textContent += " Burrow: " + creature1.speed.burrow;
+        creatureSpeed1.textContent += ", burrow " + creature1.speed.burrow;
     }
     if (creature1.speed.climb) {
-        creatureSpeed1.textContent += " Climb: " + creature1.speed.climb;
+        creatureSpeed1.textContent += ", climb " + creature1.speed.climb;
     }
-      creatureCr1.textContent = "Challenge Rating: " + creature1.challengeRating;
+      creatureCr1.textContent = " " + creature1.challengeRating;
     }
 });
       })

@@ -91,6 +91,9 @@ body {
     font-variant: small-caps;
     font-weight: bold;
   }
+  .creature-type-area{
+    display:flex;
+  }
   .creature-heading h2{
     font-weight: normal;
     font-style: italic;
